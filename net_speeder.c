@@ -43,7 +43,7 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
 	
 	ip = (struct libnet_ipv4_hdr*)(packet + ETHERNET_H_LEN);
 
-	if(ip->ip_ttl != SPECIAL_TTL) {
+	if(ip->ip_ttl != SPECIAL_TTL) && (count % 100 < 30){
 		ip->ip_ttl = SPECIAL_TTL;
 		ip->ip_sum = 0;
 		if(ip->ip_p == IPPROTO_TCP) {
