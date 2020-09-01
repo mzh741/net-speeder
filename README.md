@@ -34,6 +34,7 @@ debian/ubuntu：
     #安装libpcap-dev：
     apt-get install libpcap0.8-dev 
 
+    apt-get install -y libnet1-dev libpcap0.8-dev
 centos： 
 
     #下载epel：https://fedoraproject.org/wiki/EPEL/zh-cn 例：CentOS6 64位：
@@ -59,8 +60,10 @@ Linux Cooked interface使用编译（venetX，OpenVZ）：
     #参数：./net_speeder 网卡名 加速规则（bpf规则）
     #ovz用法(加速所有ip协议数据)： 
     ./net_speeder venet0 "ip"
-    
+    ./net_speeder eth0 "ip"
 如果kvm下报错：err msg:[libnet_write_raw_ipv4(): -1 bytes written (Message too long)
     
     #关闭tso
     ethtool -K 网卡名 tso off
+    apt install ethtool -y
+    ethtool -K eth0 tso off
