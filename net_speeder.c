@@ -39,17 +39,17 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
 	struct libnet_ipv4_hdr *ip;              
 
 	libnet_t *libnet_handler = (libnet_t *)args;
-	count++;
 	
 	ip = (struct libnet_ipv4_hdr*)(packet + ETHERNET_H_LEN);
 
-	if((ip->ip_ttl != SPECIAL_TTL) && (count % 50 <= 10)){
+	if((ip->ip_ttl != SPECIAL_TTL)){
 		ip->ip_ttl = SPECIAL_TTL;
 		ip->ip_sum = 0;
-		if(ip->ip_p == IPPROTO_TCP) {
+		if((ip->ip_p == IPPROTO_TCP) && (count % 50 <= 10)) {
 			struct libnet_tcp_hdr *tcp = (struct libnet_tcp_hdr *)((u_int8_t *)ip + ip->ip_hl * 4);
 			tcp->th_sum = 0;
 			libnet_do_checksum(libnet_handler, (u_int8_t *)ip, IPPROTO_TCP, LIBNET_TCP_H);
+                        count++;
 		} else if(ip->ip_p == IPPROTO_UDP) {
 			struct libnet_udp_hdr *udp = (struct libnet_udp_hdr *)((u_int8_t *)ip + ip->ip_hl * 4);
 			udp->uh_sum = 0;
